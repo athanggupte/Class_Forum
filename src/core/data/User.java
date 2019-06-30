@@ -15,11 +15,11 @@ public class User {
 	FE, SE, TE, BE
     };
     
-    int mId;
-    String mName;
-    String mEmail;
-    Class mClass;
-    byte mDivision;
-    java.sql.Date mDate;
+    int userId;
+    String userName;
+    String userEmail;
+    Class userClass;
+    byte userDivision;
+    java.sql.Date userDate;
     
 }

@@ -16,10 +16,13 @@ import javax.swing.SwingWorker;
  */
 public class EmailService extends SwingWorker{	    //This class is an Asynchronous Task that sends an email to the recipient
     
+    java.awt.Component parent;
+    
     String mToAddress;
     String mMessageString;
     
-    public EmailService(String pToAddress, String pMessageString) {
+    public EmailService(java.awt.Component parent, String pToAddress, String pMessageString) {
+	this.parent = parent;
 	this.mToAddress = pToAddress;
 	this.mMessageString = pMessageString;
     }
@@ -33,8 +36,7 @@ public class EmailService extends SwingWorker{	    //This class is an Asynchrono
 	properties.put("mail.smtp.host", "smtp.gmail.com");
 	properties.put("mail.smtp.port", "465");
 	properties.put("mail.smtp.auth", "true");
-	properties.put("mail.smtp.socketFactory.port", "465");
-	properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+	properties.put("mail.smtp.starttls.enable", "true");
 	
 	Session session = Session.getDefaultInstance(properties, 
 		new Authenticator() {
@@ -68,5 +70,13 @@ public class EmailService extends SwingWorker{	    //This class is an Asynchrono
 	sendMail();
 	return null;
     }
+
+    @Override
+    protected void done() {
+	super.done();
+	new javax.swing.JOptionPane().showMessageDialog(parent, "Email sent succesfully");
+    }
+    
+    
     
 }

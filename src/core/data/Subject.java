@@ -11,7 +11,7 @@ package core.data;
  */
 public class Subject {
     
-    int mId;
-    String mName;
+    int subjectId;
+    String subjectName;
     
 }

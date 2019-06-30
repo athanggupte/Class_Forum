@@ -5,8 +5,8 @@
  */
 package core;
 
-import core.database.DatabaseHandler;
-import core.gui.LauncherWindow;
+import core.communication.DatabaseHandler;
+import core.gui.windows.LauncherWindow;
 
 /**
  *
@@ -14,13 +14,16 @@ import core.gui.LauncherWindow;
  */
 public class Launcher {
     
+    static volatile DatabaseHandler databaseThread;
+    
     public static void main(String[] args) {
 	
-	final DatabaseHandler dbHandler = new DatabaseHandler();
+	databaseThread = new DatabaseHandler();
 	
-	java.awt.EventQueue.invokeLater(new Runnable() {
+	javax.swing.SwingUtilities.invokeLater(new Runnable() {
+	    @Override
 	    public void run() {
-		new LauncherWindow(dbHandler).setVisible(true);
+		new LauncherWindow(databaseThread).setVisible(true);
 	    }
 	});
     }

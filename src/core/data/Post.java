@@ -11,10 +11,10 @@ package core.data;
  */
 public class Post {
     
-    int mId;
-    String mContent;
-    java.sql.Date mDate;
-    Topic mTopic;
-    User mUser;
+    int postId;
+    String postContent;
+    java.sql.Date postDate;
+    Topic postTopic;
+    User postBy;
     
 }

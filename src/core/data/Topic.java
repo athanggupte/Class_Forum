@@ -11,10 +11,10 @@ package core.data;
  */
 public class Topic {
     
-    int mId;
-    String mName;
-    Subject mSubject;
-    User mUser;
-    java.sql.Date mDate;
+    int topicId;
+    String topicName;
+    Subject topicSubject;
+    User topicUser;
+    java.sql.Date topicDate;
     
 }
