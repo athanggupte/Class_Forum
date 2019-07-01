@@ -7,9 +7,9 @@ package core.communication;
 
 import java.sql.*;
 import core.data.User;
-import java.util.ArrayDeque;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.text.PasswordView;
 
 /**
  *
@@ -17,50 +17,53 @@ import java.util.logging.Logger;
  */
 public class DatabaseHandler {
     
-    /**
-     * @param args the command line arguments
-     */
-    Connection dbConnection;
-    //private static ArrayDeque dbQueryQueue;
-
-    public DatabaseHandler() {
-
-	final String dbURL = "jdbc:mysql://db4free.net:3306/forum_db_213";
-	final String user = "adkiller007";
-	final String password = "Athang213";
+    public static void searchRecord(Connection dbConnection, String username, String password) {
 	
-	try {
-	    Class.forName("com.mysql.cj.jdbc.Driver");
-
-	    dbConnection = DriverManager.getConnection(dbURL, user, password);
-
-	} catch (SQLException | ClassNotFoundException e) {
-	    e.printStackTrace(); System.exit(1);
-	} finally {
-	    System.out.println("Connected");
-	}
-
-    }
-    
-    public void searchRecord(String fName) {
-	
-	try {
-	    Statement statement = dbConnection.createStatement();
-	    ResultSet rs = statement.executeQuery("SELECT * FROM subjects");
+	synchronized(dbConnection) {
+	    try {
+		PreparedStatement statement = dbConnection.prepareStatement("SELECT * FROM users "
+			+ "WHERE user_name=? AND user_pass=SHA2(?, 512);");
+		statement.setString(1, username);
+		statement.setString(2, password);
+		
+		ResultSet rs = statement.executeQuery();
 	    
-	    while(rs.next()) {
-		System.out.println(rs.getInt("sub_id") + "\t|\t" + rs.getString("sub_name"));
+		while(rs.next()) {
+		    System.out.println(rs.getInt("user_id")
+			    + "\t|\t" + rs.getString("user_name")
+			    + "\t|\t" + rs.getString("user_email")
+			    + "\t|\t" + rs.getString("user_class")
+			    + "\t|\t" + rs.getInt("user_div")
+		    );
+		}
+		System.out.println("No. of records fetched : " + rs.getRow());
+	    
+	    } catch (SQLException ex) {
+		Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
 	    }
-	    System.out.println("No. of records fetched : " + rs.getRow());
-	    
-	} catch (SQLException ex) {
-	    Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
 	}
 	
     }
     
-    public void insertRecord(User record) throws SQLException {
-
+    public static void insertRecord(Connection dbConnection, User record, String password) {
+	
+	synchronized(dbConnection) {
+	    try {
+		PreparedStatement statement = dbConnection.prepareStatement("INSERT INTO "
+			+ "users(user_name, user_email, user_pass, user_class, user_div, user_date, user_salt) "
+			+ "VALUES(?, ?, SHA2(?, 512), 'TE', 2, NOW(), 'l00ph0le');");
+		statement.setString(1, record.getUserName());
+		statement.setString(2, record.getUserEmail());
+		statement.setString(3, password);
+		
+		int result = statement.executeUpdate();
+		
+		System.out.println("Insert Result : " + result);
+	    } catch (Exception e) {
+		Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, e);
+	    }
+	}
+	
     }
     
 }

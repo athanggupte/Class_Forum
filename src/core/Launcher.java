@@ -5,7 +5,7 @@
  */
 package core;
 
-import core.communication.DatabaseHandler;
+import core.communication.DatabaseConnection;
 import core.gui.windows.LauncherWindow;
 
 /**
@@ -14,16 +14,16 @@ import core.gui.windows.LauncherWindow;
  */
 public class Launcher {
     
-    static volatile DatabaseHandler databaseThread;
+    static DatabaseConnection dbConnection;
     
     public static void main(String[] args) {
 	
-	databaseThread = new DatabaseHandler();
+	dbConnection = new DatabaseConnection();
 	
 	javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	    @Override
 	    public void run() {
-		new LauncherWindow(databaseThread).setVisible(true);
+		new LauncherWindow(dbConnection).setVisible(true);
 	    }
 	});
     }

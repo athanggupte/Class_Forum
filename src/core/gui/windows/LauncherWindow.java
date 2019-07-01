@@ -5,7 +5,9 @@
  */
 package core.gui.windows;
 
+import core.communication.DatabaseConnection;
 import core.communication.DatabaseHandler;
+import core.data.User;
 import core.gui.elements.*;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
@@ -18,7 +20,7 @@ import javax.swing.*;
  * @author ADMIN
  */
 public class LauncherWindow extends JFrame{
-    DatabaseHandler dbHandler;
+    DatabaseConnection dbConnection;
 
     private ColorSchemes colorScheme;
     
@@ -28,9 +30,9 @@ public class LauncherWindow extends JFrame{
     private JPanel jLoginPanel;
     private JPanel jRegisterPanel;
     
-    public LauncherWindow(DatabaseHandler dbHandler) {
+    public LauncherWindow(DatabaseConnection dbConnection) {
 	super("Forum");
-	this.dbHandler = dbHandler;
+	this.dbConnection = dbConnection;
 	
 	colorScheme = new ColorSchemes(ColorSchemes.Themes.THEME1);
 	
@@ -66,9 +68,7 @@ public class LauncherWindow extends JFrame{
 		new Thread(new Runnable() {
 		    @Override
 		    public void run() {
-			synchronized(dbHandler) {
-			    dbHandler.searchRecord("");
-			}
+			    DatabaseHandler.searchRecord(dbConnection.getConnection(), usernameField.getText(), String.valueOf(passwordField.getPassword()));
 		    }
 		}).start();
 	    }
@@ -161,7 +161,12 @@ public class LauncherWindow extends JFrame{
 	GButton signUpButton = new GButton("Submit", colorScheme, ColorSchemes.Highlight.HL1){
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
-		cardLayout.previous(getContentPane());
+		new Thread(new Runnable() {
+		    @Override
+		    public void run() {
+			DatabaseHandler.insertRecord(dbConnection.getConnection(), new User(usernameField.getText(), emailField.getText()), String.valueOf(passwordField.getPassword()));
+		    }
+		}).start();
 	    }
 	};
 	signUpButton.setFont(new Font(signUpButton.getFont().getName(), Font.BOLD, 18));
@@ -199,7 +204,7 @@ public class LauncherWindow extends JFrame{
 					.addComponent(passwordField)
 					.addComponent(emailField)))
 			.addComponent(signUpButton)
-		);
+	);
 	
 	groupLayout.setVerticalGroup(
 		groupLayout.createSequentialGroup()

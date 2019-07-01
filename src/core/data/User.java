@@ -5,6 +5,8 @@
  */
 package core.data;
 
+import java.sql.Date;
+
 /**
  *
  * @author ADMIN
@@ -21,5 +23,28 @@ public class User {
     Class userClass;
     byte userDivision;
     java.sql.Date userDate;
+
+    public User(String userName, String userEmail) {
+	this.userName = userName;
+	this.userEmail = userEmail;
+    }
+
+    public String getUserName() {
+	return userName;
+    }
+
+    public String getUserEmail() {
+	return userEmail;
+    }
+
+    public Class getUserClass() {
+	return userClass;
+    }
+
+    public byte getUserDivision() {
+	return userDivision;
+    }
+    
+    
     
 }
