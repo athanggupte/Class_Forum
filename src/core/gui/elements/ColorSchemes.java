@@ -6,7 +6,6 @@
 package core.gui.elements;
 
 import java.awt.Color;
-import org.eclipse.persistence.jpa.jpql.tools.model.query.AbsExpressionStateObject;
 
 /**
  *
