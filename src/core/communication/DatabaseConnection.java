@@ -43,7 +43,13 @@ public class DatabaseConnection {
 	return dbConnection;
     }
 
-    
+    public void close() {
+	try {
+	    dbConnection.close();
+	} catch (SQLException ex) {
+	    Logger.getLogger(DatabaseConnection.class.getName()).log(Level.SEVERE, null, ex);
+	}
+    }
     
     
 }

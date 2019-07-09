@@ -5,6 +5,9 @@
  */
 package core.data;
 
+import core.communication.DatabaseHandler;
+import java.sql.Date;
+
 /**
  *
  * @author ADMIN
@@ -14,7 +17,29 @@ public class Post {
     int postId;
     String postContent;
     java.sql.Date postDate;
-    Topic postTopic;
-    User postBy;
+    int postTopic;
+    int postBy;
+
+    public int getPostId() {
+	return postId;
+    }
+
+    public String getPostContent() {
+	return postContent;
+    }
+
+    public Date getPostDate() {
+	return postDate;
+    }
+
+    public Topic getPostTopic(java.sql.Connection dbConnection) {
+	return DatabaseHandler.searchTopicById(dbConnection, postTopic);
+    }
+
+    public User getPostBy(java.sql.Connection dbConnection) {
+	return DatabaseHandler.searchUserById(dbConnection, postBy);
+    }
+    
+    
     
 }

@@ -9,17 +9,8 @@ package core.data;
  *
  * @author ADMIN
  */
-public class Topic {
+public class Cache {
     
-    int topicId;
-    String topicName;
-    Subject topicSubject;
-    int topicUser;
-    java.sql.Date topicDate;
-
-    public Topic(String topicName, String topicSubject, String topicUser) {
-	//TODO : Constructor
-    }
-    
+    //TODO : Lists for recently accessed/initialised Users, Topics, Posts, Subjects
     
 }

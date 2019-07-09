@@ -6,7 +6,12 @@
 package core;
 
 import core.communication.DatabaseConnection;
+import core.data.User;
+import core.gui.windows.DashboardWindow;
 import core.gui.windows.LauncherWindow;
+import core.gui.windows.LoadingDialog;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,7 +28,12 @@ public class Launcher {
 	javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	    @Override
 	    public void run() {
-		new LauncherWindow(dbConnection).setVisible(true);
+		try {
+		    //new LauncherWindow(dbConnection).setVisible(true);
+		    new DashboardWindow(new User("athang213", "athang213@gmail.com", "TE", "CS", new java.sql.Date(2019,07,07))).setVisible(true);
+		} catch (User.InvalidUserException ex) {
+		    Logger.getLogger(Launcher.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	    }
 	});
     }

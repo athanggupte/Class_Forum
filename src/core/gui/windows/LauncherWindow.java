@@ -13,6 +13,11 @@ import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -21,7 +26,8 @@ import javax.swing.*;
  */
 public class LauncherWindow extends JFrame{
     DatabaseConnection dbConnection;
-
+    User currentUser;
+    
     private ColorSchemes colorScheme;
     
     private CardLayout cardLayout;
@@ -33,6 +39,7 @@ public class LauncherWindow extends JFrame{
     public LauncherWindow(DatabaseConnection dbConnection) {
 	super("Forum");
 	this.dbConnection = dbConnection;
+	this.currentUser = null;
 	
 	colorScheme = new ColorSchemes(ColorSchemes.Themes.THEME1);
 	
@@ -41,10 +48,10 @@ public class LauncherWindow extends JFrame{
 	
 	cardLayout = new CardLayout();
 	
+    //	setUndecorated(true);
 	pack();
 	
 	setLayout(cardLayout);
-	//setUndecorated(true);
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setSize(440, 600);
 	setLocationRelativeTo(null);
@@ -67,12 +74,35 @@ public class LauncherWindow extends JFrame{
 	GButton loginButton = new GButton("Login", colorScheme, ColorSchemes.Highlight.HL2){
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
-		new Thread(new Runnable() {
+		
+		FutureTask loginTask = new FutureTask(new Callable<User>() {
 		    @Override
-		    public void run() {
-			    DatabaseHandler.searchRecord(dbConnection.getConnection(), usernameField.getText(), String.valueOf(passwordField.getPassword()));
+		    public User call() throws Exception {
+			return DatabaseHandler.login(dbConnection.getConnection(), usernameField.getText(), String.valueOf(passwordField.getPassword()));
 		    }
-		}).start();
+		});
+		
+		new Thread(loginTask).start();
+		try {
+		    currentUser = (User) loginTask.get();
+		    if(currentUser != null) {
+			System.out.println(currentUser.toString());
+			dispose();
+			dbConnection.close();
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			    @Override
+			    public void run() {
+				new DashboardWindow(currentUser).setVisible(true);
+			    }
+			});
+		    }
+		    else {
+			System.out.println("User Not Found");
+			javax.swing.JOptionPane.showMessageDialog(jLoginPanel, "Invalid Credentials", "Login Error", JOptionPane.ERROR_MESSAGE);
+		    }
+		} catch (InterruptedException | ExecutionException ex) {
+		    Logger.getLogger(LauncherWindow.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	    }
 	};
 	loginButton.setFont(new Font(loginButton.getFont().getName(), Font.BOLD, 18));
@@ -93,10 +123,12 @@ public class LauncherWindow extends JFrame{
 	usernameField.setBackground(colorScheme.primaryColor);
 	usernameField.setForeground(colorScheme.secondaryVariantColor);
 	usernameField.setBorderColor(colorScheme.primaryVariantColor);
+	usernameField.setFont(new Font(usernameField.getFont().getName(), Font.BOLD, 12));
 	
 	passwordField.setBackground(colorScheme.primaryColor);
 	passwordField.setForeground(colorScheme.secondaryVariantColor);
 	passwordField.setBorderColor(colorScheme.primaryVariantColor);
+	passwordField.setFont(new Font(passwordField.getFont().getName(), Font.BOLD, 12));
 	
 	usernameLabel.setForeground(colorScheme.secondaryColor);
 	usernameLabel.setFont(new Font(usernameLabel.getFont().getName(), Font.BOLD, 15));
@@ -171,10 +203,12 @@ public class LauncherWindow extends JFrame{
 	GRoundedPasswordField passwordField = new GRoundedPasswordField();
 	GRoundedTextField emailField = new GRoundedTextField();
 	JComboBox classComboBox = new JComboBox(new String[]{"FE", "SE", "TE", "BE"});
+	JComboBox branchComboBox = new JComboBox(new String[]{"CS", "IT", "ENTC"});
 	JLabel usernameLabel = new JLabel("Username");
 	JLabel passwordLabel = new JLabel("Password");
 	JLabel emailLabel = new JLabel("E-mail");
 	JLabel classLabel = new JLabel("Class");
+	JLabel branchLabel = new JLabel("Branch");
 	
 	GButton signUpButton = new GButton("Submit", colorScheme, ColorSchemes.Highlight.HL1){
 	    @Override
@@ -182,7 +216,11 @@ public class LauncherWindow extends JFrame{
 		new Thread(new Runnable() {
 		    @Override
 		    public void run() {
-			DatabaseHandler.insertRecord(dbConnection.getConnection(), new User(usernameField.getText(), emailField.getText()), String.valueOf(passwordField.getPassword()));
+			try {
+			    DatabaseHandler.insertRecord(dbConnection.getConnection(), new User(usernameField.getText(), emailField.getText(), classComboBox.getSelectedIndex()+1, branchComboBox.getSelectedIndex()+1), String.valueOf(passwordField.getPassword()));
+			} catch (User.InvalidUserException ex) {
+			    Logger.getLogger(LauncherWindow.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		    }
 		}).start();
 	    }
@@ -211,6 +249,9 @@ public class LauncherWindow extends JFrame{
 	classComboBox.setBackground(colorScheme.primaryColor);
 	classComboBox.setForeground(colorScheme.secondaryVariantColor);
 	
+	branchComboBox.setBackground(colorScheme.primaryColor);
+	branchComboBox.setForeground(colorScheme.secondaryVariantColor);
+	
 	usernameLabel.setForeground(colorScheme.secondaryColor);
 	usernameLabel.setFont(new Font(usernameLabel.getFont().getName(), Font.BOLD, 13));
 	
@@ -221,6 +262,8 @@ public class LauncherWindow extends JFrame{
 	emailLabel.setFont(new Font(usernameLabel.getFont().getName(), Font.BOLD, 13));
 	
 	classLabel.setFont(new Font(usernameLabel.getFont().getName(), Font.BOLD, 13));
+	
+	branchLabel.setFont(new Font(usernameLabel.getFont().getName(), Font.BOLD, 13));
 	
 	groupLayout.setHorizontalGroup(
 		groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -233,12 +276,14 @@ public class LauncherWindow extends JFrame{
 					.addComponent(usernameLabel)
 					.addComponent(passwordLabel)
 					.addComponent(emailLabel)
-					.addComponent(classLabel))
+					.addComponent(classLabel)
+					.addComponent(branchLabel))
 				.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 					.addComponent(usernameField)
 					.addComponent(passwordField)
 					.addComponent(emailField)
-					.addComponent(classComboBox)))
+					.addComponent(classComboBox)
+					.addComponent(branchComboBox)))
 			.addComponent(signUpButton)
 	);
 	
@@ -259,9 +304,14 @@ public class LauncherWindow extends JFrame{
 			.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 				.addComponent(emailLabel)
 				.addComponent(emailField))
+			.addGap(10)
 			.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 				.addComponent(classLabel)
 				.addComponent(classComboBox))
+			.addGap(10)
+			.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+				.addComponent(branchLabel)
+				.addComponent(branchComboBox))
 			.addGap(15)
 			.addComponent(signUpButton, 40, 40, 40)
 			.addGap(10, 120, 170)
@@ -276,7 +326,7 @@ public class LauncherWindow extends JFrame{
     }
     
     private void initTitlePanel() {
-	//TODO
+	//jTitlePanel = new JPanel();
     }    
     
 }
