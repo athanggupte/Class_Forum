@@ -25,7 +25,7 @@ public class DatabaseHandler {
 	
 	synchronized(dbConnection) {
 	    try {
-		PreparedStatement statement = dbConnection.prepareStatement("SELECT * FROM users "
+		PreparedStatement statement = dbConnection.prepareStatement("SELECT user_salt FROM users "
 			+ "WHERE user_name=?;");
 		statement.setString(1, username);
 		
@@ -121,15 +121,15 @@ public class DatabaseHandler {
 	Topic topic = null;
 	synchronized(dbConnection) {
 	    try {
-		PreparedStatement statement = dbConnection.prepareStatement("SELECT user_name, user_class, user_branch "
-			+ "FROM users WHERE user_id=?;");
+		PreparedStatement statement = dbConnection.prepareStatement("SELECT * "
+			+ "FROM topics WHERE topic_id=?;");
 		statement.setInt(1, topicId);
 		
 		ResultSet rs = statement.executeQuery();
 		if(rs.next()) {
-		    topic = new Topic(rs.getString("user_name"),
-			    rs.getString("user_class"),
-			    rs.getString("user_branch"));
+		    topic = new Topic(rs.getString("topic_name"),
+			    rs.getString("topic_subject"),
+			    rs.getInt("topic_user"));
 		}
 		
 	    } catch (Exception e) {

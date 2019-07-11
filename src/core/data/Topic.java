@@ -17,8 +17,9 @@ public class Topic {
     int topicUser;
     java.sql.Date topicDate;
 
-    public Topic(String topicName, String topicSubject, String topicUser) {
-	//TODO : Constructor
+    public Topic(String topicName, String topicSubject, int topicUser) {
+	this.topicName = topicName;
+     //   this.topicSubject = 
     }
     
     

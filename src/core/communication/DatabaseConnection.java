@@ -21,14 +21,14 @@ public class DatabaseConnection {
 
     public DatabaseConnection() {
 	
-/*	final String dbURL = "jdbc:mysql://db4free.net:3306/forum_db_213";
+	final String dbURL = "jdbc:mysql://db4free.net:3306/forum_db_213";
 	final String dbUsername = "adkiller007";
 	final String dbPassword = "Athang213";
-*/	
-	final String dbURL = "jdbc:mysql://127.0.0.1:3306/db2";
+	
+/*	final String dbURL = "jdbc:mysql://127.0.0.1:3306/db2";
 	final String dbUsername = "athang213";
 	final String dbPassword = "One1Two2Three3";
-	
+*/	
 
 	try {
 	    this.dbConnection = DriverManager.getConnection(dbURL, dbUsername, dbPassword);

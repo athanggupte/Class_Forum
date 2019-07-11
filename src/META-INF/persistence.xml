@@ -6,6 +6,10 @@
     <class>core.entities.Posts</class>
     <class>core.entities.Topics</class>
     <class>core.entities.Users</class>
+    <class>trial.Customer</class>
+    <class>trial.DiscountCode</class>
+    <class>trial.MicroMarket</class>
+    <class>trial.NewEntity</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://db4free.net:3306/forum_db_213?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="adkiller007"/>

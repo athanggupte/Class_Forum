@@ -22,7 +22,6 @@ import javax.swing.JScrollPane;
  * @author ADMIN
  */
 public class DashboardWindow extends JFrame {
-    DatabaseConnection databaseConnection;
     User user;
 	    
     private ColorSchemes colorScheme;
@@ -33,7 +32,6 @@ public class DashboardWindow extends JFrame {
 
     public DashboardWindow(User user) {
 	super("Forum - " + user.getUserName());
-	this.databaseConnection = new DatabaseConnection();
 	this.user = user;
 	
 	colorScheme = new ColorSchemes(ColorSchemes.Themes.THEME1);
@@ -42,7 +40,7 @@ public class DashboardWindow extends JFrame {
 	
 	pack();
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	setSize(800, 600);
+	setSize(1024, 640);
 	setLocationRelativeTo(null);
     }
 
@@ -57,6 +55,7 @@ public class DashboardWindow extends JFrame {
 		(int)(scrollPane.getVerticalScrollBar().getPreferredSize().getWidth()/1.33d),
 		(int)scrollPane.getVerticalScrollBar().getPreferredSize().getHeight()));
 	scrollPane.getVerticalScrollBar().setUI(new GScrollBarUI());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 	getContentPane().add(scrollPane);
     }
     

@@ -19,19 +19,19 @@ import java.util.logging.Logger;
  */
 public class Launcher {
     
-    static DatabaseConnection dbConnection;
+    //static DatabaseConnection dbConnection;
     
     public static void main(String[] args) {
 	
-	dbConnection = new DatabaseConnection();
+	//dbConnection = new DatabaseConnection();
 	
 	javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	    @Override
 	    public void run() {
 		try {
-		    //new LauncherWindow(dbConnection).setVisible(true);
-		    new DashboardWindow(new User("athang213", "athang213@gmail.com", "TE", "CS", new java.sql.Date(2019,07,07))).setVisible(true);
-		} catch (User.InvalidUserException ex) {
+		    new LauncherWindow(new DatabaseConnection()).setVisible(true);
+		//    new DashboardWindow(new User("athang213", "athang213@gmail.com", "TE", "CS", new java.sql.Date(2019,07,07))).setVisible(true);
+		} catch (Exception ex) {
 		    Logger.getLogger(Launcher.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	    }
