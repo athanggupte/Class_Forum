@@ -29,8 +29,8 @@ public class Launcher {
 	    @Override
 	    public void run() {
 		try {
-		    new LauncherWindow(new DatabaseConnection()).setVisible(true);
-		//    new DashboardWindow(new User("athang213", "athang213@gmail.com", "TE", "CS", new java.sql.Date(2019,07,07))).setVisible(true);
+		//    new LauncherWindow(new DatabaseConnection()).setVisible(true);
+		    new DashboardWindow(new User("athang213", "athang213@gmail.com", "TE", "CS", new java.sql.Date(2019,07,07))).setVisible(true);
 		} catch (Exception ex) {
 		    Logger.getLogger(Launcher.class.getName()).log(Level.SEVERE, null, ex);
 		}
