@@ -22,7 +22,7 @@ public class GPostPanel extends JPanel{
     
     public GPostPanel(Post post) {
 	
-	//TODO : Design a panel for all posts
+        JLabel
 	
     }
     
