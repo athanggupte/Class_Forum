@@ -6,9 +6,11 @@
 package core.gui.windows;
 
 import core.communication.DatabaseConnection;
+import core.data.DataWorker;
 import core.data.User;
 import core.gui.elements.ColorSchemes;
 import core.gui.elements.GButton;
+import core.gui.elements.GPostPanel;
 import core.gui.elements.GScrollBarUI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -52,23 +54,25 @@ public class DashboardWindow extends JFrame {
         
         groupLayout.setHorizontalGroup(
                 groupLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(jTitlePanel)
+                    //    .addComponent(jTitlePanel)
                         .addGroup(groupLayout.createSequentialGroup()
                                 .addComponent(jSideBarPanel, 120, 240, 260)
+                                .addGap(5, 8, 10)
                                 .addComponent(jWorkAreaPanel))
         );
         
         groupLayout.setVerticalGroup(
                 groupLayout.createSequentialGroup()
-                        .addComponent(jTitlePanel, 30, 30, 30)
+                    //    .addComponent(jTitlePanel, 30, 30, 30)
                         .addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
                                 .addComponent(jSideBarPanel, 600, 600, 600)
+                                .addGap(3, 5, 8)
                                 .addComponent(jWorkAreaPanel, 600, 600, 600))
         );
         
         setLayout(groupLayout);
         
-        setUndecorated(true);
+        //setUndecorated(true);
 	pack();
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setSize(1024, 640);
@@ -86,6 +90,9 @@ public class DashboardWindow extends JFrame {
 	scrollPane.getVerticalScrollBar().setUI(new GScrollBarUI());
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 	//getContentPane().add(scrollPane);
+        
+        GPostPanel postPanel = new GPostPanel(DataWorker.searchPostById(1));
+        jWorkAreaPanel.add(postPanel);
     }
     
     public void initSideBar() {

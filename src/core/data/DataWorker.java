@@ -27,21 +27,42 @@ public class DataWorker {
         
         User user;
         user = cache.getUser(userId);
-        if(user != null)
-            return user;
-        
-        return DatabaseHandler.searchUserById(dbConnection.getConnection(), userId);
-        
+        if(user == null) {
+            user = DatabaseHandler.searchUserById(dbConnection.getConnection(), userId);
+            cache.putUser(userId, user);
+        }
+        return user;
     }
     
     public static Topic searchTopicById(int topicId) {
         
         Topic topic;
         topic = cache.getTopic(topicId);
-        if(topic != null)
-            return topic;
+        if(topic == null) {
+            topic = DatabaseHandler.searchTopicById(dbConnection.getConnection(), topicId);
+            cache.putTopic(topicId, topic);
+        }
         
-        return DatabaseHandler.searchTopicById(dbConnection.getConnection(), topicId);
+        return topic;
+    }
+    
+    public static Subject searchSubjectById(int subjectId) {
+        
+        Subject subject;
+        subject = cache.getSubject(subjectId);
+        if(subject == null) {
+            subject = DatabaseHandler.searchSubjectById(dbConnection.getConnection(), subjectId);
+            cache.putSubject(subjectId, subject);
+        }
+        
+        return subject;
+    }
+    
+    public static Post searchPostById(int postId) {
+        
+        Post post;
+        post = DatabaseHandler.searchPostById(dbConnection.getConnection(), postId);
+        return post;
         
     }
     

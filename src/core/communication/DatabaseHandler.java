@@ -5,15 +5,14 @@
  */
 package core.communication;
 
-import core.data.Topic;
 import java.sql.*;
 import core.data.User;
+import core.data.Subject;
+import core.data.Topic;
+import core.data.Post;
 import core.utils.CryptoTools;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.text.PasswordView;
 
 /**
  *
@@ -128,8 +127,8 @@ public class DatabaseHandler {
 		ResultSet rs = statement.executeQuery();
 		if(rs.next()) {
 		    topic = new Topic(rs.getString("topic_name"),
-			    rs.getString("topic_subject"),
-			    rs.getInt("topic_user"));
+			    rs.getString("topic_sub"),
+			    rs.getInt("topic_by"));
 		}
 		
 	    } catch (Exception e) {
@@ -141,4 +140,50 @@ public class DatabaseHandler {
 	return topic;
     }
     
+    public static Subject searchSubjectById(Connection dbConnection, int subjectId) {
+	Subject subject = null;
+	synchronized(dbConnection) {
+	    try {
+		PreparedStatement statement = dbConnection.prepareStatement("SELECT * "
+			+ "FROM subjects WHERE sub_id=?;");
+		statement.setInt(1, subjectId);
+		
+		ResultSet rs = statement.executeQuery();
+		if(rs.next()) {
+		    subject = new Subject(rs.getString("sub_name"));
+		}
+		
+	    } catch (Exception e) {
+		Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, e);
+	    }
+	
+	}
+	
+	return subject;
+    }
+    
+    public static Post searchPostById(Connection dbConnection, int subjectId) {
+	Post post = null;
+	synchronized(dbConnection) {
+	    try {
+		PreparedStatement statement = dbConnection.prepareStatement("SELECT * "
+			+ "FROM posts WHERE post_id=?;");
+		statement.setInt(1, subjectId);
+		
+		ResultSet rs = statement.executeQuery();
+		if(rs.next()) {
+		    post = new Post(rs.getString("post_content"),
+                            rs.getDate("post_date"),
+                            rs.getInt("post_topic"),
+                            rs.getInt("post_by"));
+		}
+		
+	    } catch (Exception e) {
+		Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, e);
+	    }
+	
+	}
+	
+	return post;
+    }
 }

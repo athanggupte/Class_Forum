@@ -5,7 +5,7 @@
  */
 package core.data;
 
-import core.communication.DatabaseHandler;
+//import core.communication.DatabaseHandler;
 import java.sql.Date;
 
 /**
@@ -20,10 +20,18 @@ public class Post {
     int postTopic;
     int postBy;
 
-    public int getPostId() {
+    public Post(String postContent, Date postDate, int postTopic, int postBy) {
+        this.postContent = postContent;
+        this.postDate = postDate;
+        this.postTopic = postTopic;
+        this.postBy = postBy;
+    }
+    
+    
+/*    public int getPostId() {
 	return postId;
     }
-
+*/
     public String getPostContent() {
 	return postContent;
     }
@@ -32,12 +40,14 @@ public class Post {
 	return postDate;
     }
 
-    public Topic getPostTopic(java.sql.Connection dbConnection) {
-	return DatabaseHandler.searchTopicById(dbConnection, postTopic);
+    public Topic getPostTopic() {
+	//return DatabaseHandler.searchTopicById(dbConnection, postTopic);
+        return DataWorker.searchTopicById(postTopic);
     }
 
-    public User getPostBy(java.sql.Connection dbConnection) {
-	return DatabaseHandler.searchUserById(dbConnection, postBy);
+    public User getPostBy() {
+	//return DatabaseHandler.searchUserById(dbConnection, postBy);
+        return DataWorker.searchUserById(postBy);
     }
     
     

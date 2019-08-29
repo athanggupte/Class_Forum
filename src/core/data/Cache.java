@@ -5,6 +5,7 @@
  */
 package core.data;
 
+import java.util.ArrayDeque;
 import java.util.TreeMap;
 
 /**
@@ -13,11 +14,19 @@ import java.util.TreeMap;
  */
 public class Cache {
     
+    ArrayDeque<Integer> userQueue;
+    ArrayDeque<Integer> topicQueue;
+    ArrayDeque<Integer> subjectQueue;
+    
     TreeMap<Integer, User> userCache;
     TreeMap<Integer, Topic> topicCache;
     TreeMap<Integer, Subject> subjectCache;
 
     public Cache() {
+        userQueue = new ArrayDeque<>();
+        topicQueue = new ArrayDeque<>();
+        subjectQueue = new ArrayDeque<>();
+        
         userCache = new TreeMap<>();
         topicCache = new TreeMap<>();
         subjectCache = new TreeMap<>();
@@ -28,7 +37,12 @@ public class Cache {
     }
 
     public void putUser(Integer key, User value) {
+        if(userCache.size() > 11) {
+            userCache.remove(userQueue.getFirst());
+            userQueue.remove();
+        }
         userCache.put(key, value);
+        userQueue.add(key);
     }
 
     public Topic getTopic(Integer key) {
@@ -36,7 +50,12 @@ public class Cache {
     }
 
     public void putTopic(Integer key, Topic value) {
+        if(topicCache.size() > 17) {
+            topicCache.remove(topicQueue.getFirst());
+            topicQueue.remove();
+        }
         topicCache.put(key, value);
+        topicQueue.add(key);
     }
 
     public Subject getSubject(Integer key) {
@@ -44,7 +63,12 @@ public class Cache {
     }
 
     public void putSubject(Integer key, Subject value) {
+        if(subjectCache.size() > 11) {
+            subjectCache.remove(subjectQueue.getFirst());
+            subjectQueue.remove();
+        }
         subjectCache.put(key, value);
+        subjectQueue.add(key);
     }
     
     

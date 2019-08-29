@@ -13,5 +13,14 @@ public class Subject {
     
     int subjectId;
     String subjectName;
+
+    public Subject(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+    
     
 }
